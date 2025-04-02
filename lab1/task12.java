@@ -15,6 +15,7 @@ public class task12 {
         int i, j = 0;
 
         boolean foundIt = false;
+        /*
         for (i = 0; i < arrayOfInts.length; i++) {
             for (j = 0; j < arrayOfInts[i].length;
                  j++) {
@@ -26,18 +27,23 @@ public class task12 {
             if (foundIt) break;
         }
 
-        /*
+         */
+
+
         search:
         for (i = 0; i < arrayOfInts.length; i++) {
             for (j = 0; j < arrayOfInts[i].length;
                  j++) {
+                System.out.println(j);
                 if (arrayOfInts[i][j] == searchfor) {
                     foundIt = true;
-                    break search;
+                    System.out.println("Found!");
+                    continue search;
                 }
             }
+            System.out.println("After inner loop");
         }
-         */
+
 
         if (foundIt) {
             System.out.println("Found " + searchfor + " at " + i + ", " + j);
