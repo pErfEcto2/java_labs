@@ -8,7 +8,7 @@ public class Network {
         private ArrayList<Member> friends;
 
         public Member(String name) {
-            this.name = name;
+            name = name;
             friends = new ArrayList();
         }
 

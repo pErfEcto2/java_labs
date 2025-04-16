@@ -28,10 +28,15 @@ public final class Point5 {
     }
 
     public Point5 translate(double x, double y) {
-        return new Point5(this.x + x, this.y + y);
+        return new Point5(x + x, y + y);
     }
 
     public Point5 scale(double value) {
-        return new Point5(this.x * value, this.y * value);
+        return new Point5(x * value, y * value);
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
     }
 }

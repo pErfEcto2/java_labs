@@ -9,9 +9,9 @@ class Invoice {
         private double unitPrice;
 
         public Item(String description, int quantity, double unitPrice) {
-            this.description = description;
-            this.quantity = quantity;
-            this.unitPrice = unitPrice;
+            description = description;
+            quantity = quantity;
+            unitPrice = unitPrice;
         }
 
         public double price() { return quantity * unitPrice; }

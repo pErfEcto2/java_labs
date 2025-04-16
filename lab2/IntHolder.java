@@ -6,7 +6,7 @@ public class IntHolder {
         number = 0;
     }
     public IntHolder(int number) {
-        this.number = number;
+        number = number;
     }
     public IntHolder setNumber(int value) {
         number = value;
@@ -17,8 +17,8 @@ public class IntHolder {
     }
     public void swap(IntHolder intHolder) {
         int tmp = intHolder.number;
-        intHolder.number = this.number;
-        this.number = tmp;
+        intHolder.number = number;
+        number = tmp;
     }
     public static void main(String[] args) {
         IntHolder a = new IntHolder(3);

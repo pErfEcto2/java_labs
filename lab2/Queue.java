@@ -8,7 +8,7 @@ public class Queue {
         Node prev;
 
         Node(String str) {
-            this.str = str;
+            str = str;
             next = null;
             prev = null;
         }
@@ -21,10 +21,16 @@ public class Queue {
     public Queue() {
         head = null;
         tail = null;
+        size = 0;
+    }
+
+    public int size() {
+        return size;
     }
 
     public void add(String str) {
         Node Node = new Node(str);
+        size++;
 
         if (tail == null) {
             tail = Node;
@@ -42,6 +48,8 @@ public class Queue {
             return null;
         }
 
+        size--;
+
         String out = head.str;
         if (head == tail) {
             head = null;
@@ -56,13 +64,15 @@ public class Queue {
         return out;
     }
 
-    public void print() {
-        StringBuilder s = new StringBuilder();
+    @Override
+    public String toString() {
         Node ptr = head;
-
         if (ptr == null) {
-            System.out.println("Queue is empty");
+            return "Queue is empty";
         }
+
+        StringBuilder s = new StringBuilder();
+        s.append("Size: ").append(size()).append("\n");
 
         while (ptr != null) {
             if (ptr == head && ptr == tail) {
@@ -77,7 +87,7 @@ public class Queue {
             ptr = ptr.prev;
         }
 
-        System.out.println(s);
+        return s.toString();
     }
 
     public class Iterator {
@@ -125,5 +135,31 @@ public class Queue {
 
     public Iterator iterator() {
         return new Iterator();
+    }
+
+    public static void main(String[] args) {
+        Queue q = new Queue();
+        System.out.println(q);
+
+        q.add("1");
+        System.out.println(q);
+
+        q.add("2");
+        System.out.println(q);
+
+        q.add("3");
+        System.out.println(q);
+
+        System.out.println(q.pop());
+        System.out.println(q + "\n");
+
+        System.out.println(q.pop());
+        System.out.println(q + "\n");
+
+        System.out.println(q.pop());
+        System.out.println(q + "\n");
+
+        System.out.println(q.pop());
+        System.out.println(q);
     }
 }
