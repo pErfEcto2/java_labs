@@ -4,7 +4,7 @@ public class TwoConstructors {
     private int value;
 
     private TwoConstructors(int value) {  // Приватный конструктор
-        value = value;
+        this.value = value;
     }
 
     public static TwoConstructors createDefault(int value) {

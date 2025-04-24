@@ -10,5 +10,6 @@ public class PrivateFieldInStaticMethod {
     public static void main(String[] args) {
         PrivateFieldInStaticMethod other = new PrivateFieldInStaticMethod();
         System.out.println(getA(other));
+        System.out.println(other.a);
     }
 }

@@ -4,7 +4,6 @@ package lab2;
 /**
  * Immutable Point class
  */
-
 public final class Point5 {
     private final double x;
     private final double y;

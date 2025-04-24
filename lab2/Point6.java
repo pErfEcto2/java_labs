@@ -14,8 +14,8 @@ public class Point6 {
     }
 
     public Point6(double x, double y) {
-        x = x;
-        y = y;
+        this.x = x;
+        this.y = y;
     }
 
     public double getX() {
@@ -27,8 +27,8 @@ public class Point6 {
     }
 
     public void translate(double x, double y) {
-        x += x;
-        y += y;
+        this.x += x;
+        this.y += y;
     }
 
     public void scale(double value) {
