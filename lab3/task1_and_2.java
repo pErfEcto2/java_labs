@@ -22,6 +22,13 @@ class Employee implements Measurable {
     public double getMeasure() {
         return salary;
     }
+
+    public double getSalary() { return salary; }
+
+    @Override
+    public String toString() {
+        return "name: " + name + "; salary: " + salary;
+    }
 }
 
 class task1_and_2 {
