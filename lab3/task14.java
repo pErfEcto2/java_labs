@@ -12,7 +12,7 @@ public class task14 {
                 new Employee("employee 2", 2),
                 new Employee("employee 2", 3)
         };
-
+        
         System.out.println("Before sorting: ");
         Arrays.stream(employees).forEach(System.out::println);
 

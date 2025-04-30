@@ -8,8 +8,10 @@ import lab2.Point5;
  * Represents a rectangle defined by two diagonal points
  */
 public class Rectangle {
-    private final Point5 bottomLeft; // Bottom-left point of the rectangle
-    private final Point5 topRight; // Top-right point of the rectangle
+    /** Bottom-left point of the rectangle */
+    private final Point5 bottomLeft;
+    /** Top-right point of the rectangle */
+    private final Point5 topRight;
 
     /**
      * Creates rectangle from any two diagonal points
@@ -58,6 +60,7 @@ public class Rectangle {
      * Finds intersection points between this rectangle and another
      * @param other the other rectangle to check against
      * @return ArrayList of intersection points (0, 1, or 2 points)
+
      */
     public ArrayList<Point5> getIntersectionPoints(Rectangle other) {
         ArrayList<Point5> points = new ArrayList<>();
@@ -78,7 +81,7 @@ public class Rectangle {
                 );
 
                 if (intersection == null) {
-                    continue loop;
+                    continue;
                 }
 
                 for (Point5 p : points) {
@@ -157,17 +160,20 @@ public class Rectangle {
         rects.add( new Rectangle(new Point5(2, 2), new Point5(6, 6)));
         rects.add( new Rectangle(new Point5(10, 10), new Point5(15, 15)));
         rects.add( new Rectangle(new Point5(-1, -1), new Point5(0, 0)));
+        rects.add(new Rectangle(new Point5(-1, 1), new Point5(7, 3)));
+        rects.add(new Rectangle(new Point5(0, 0), new Point5(4, 2)));
 
-        for (int i = 1; i < 4; i++) {
+        for (int i = 1; i < 6; i++) {
             System.out.println("Checking 1 and " + (i + 1) + " rects");
             ArrayList<Point5> intersections = rects.getFirst().getIntersectionPoints(rects.get(i));
 
             if (intersections.isEmpty()) {
-                System.out.println("1 and " + (i + 1) + " rectangles do not intersect");
+                System.out.println("1 and " + (i + 1) + " rectangles do not intersect\n");
             } else {
                 for (Point5 p : intersections) {
                     System.out.println("Intersection in: " + p);
                 }
+                System.out.println();
             }
         }
     }

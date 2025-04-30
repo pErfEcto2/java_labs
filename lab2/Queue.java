@@ -1,5 +1,7 @@
 package lab2;
 
+import java.sql.SQLSyntaxErrorException;
+
 /**
  * A doubly-linked queue
  */
@@ -278,6 +280,7 @@ public class Queue {
         it.next();
         System.out.println("First remove:");
         it.remove();
+        System.out.println(q);
 
         System.out.println("Second remove:");
         try {
@@ -285,6 +288,7 @@ public class Queue {
         } catch (Exception e) {
             System.out.println("Error!");
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
 
         System.out.println("-".repeat(10) + " Infinite next() calls");
