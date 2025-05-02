@@ -1,147 +1,228 @@
 package lab2;
 
+
 import java.util.ArrayList;
-import lab2.Point5;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 /**
- * Represents a rectangle defined by two diagonal points
+ * Base interface for geometric shapes that support intersection
  */
-public class Rectangle {
-    /** Bottom-left point of the rectangle */
+interface Shape {
+    /**
+     * Computes the intersection of the current shape with another shape
+     * @param other the other shape;  intersect with
+     * @return list of resulting intersected shapes
+     */
+    List<Shape> intersect(Shape other);
+}
+
+/**
+ * Represents a line segment between two points
+ */
+class Line implements Shape {
+    /** Start point of the line */
+    private final Point5 start;
+    /** End point of the line */
+    private final Point5 end;
+
+    /**
+     * Constructs a line between two given points
+     * @param start start point
+     * @param end end point
+     */
+    public Line(Point5 start, Point5 end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    /**
+     * Returns the start point of the line
+     * @return start point
+     */
+    public Point5 getStart() { return start; }
+
+    /**
+     * Returns the end point of the line
+     * @return end point
+     */
+    public Point5 getEnd() { return end; }
+
+    @Override
+    public List<Shape> intersect(Shape other) {
+        return List.of(); // Not implemented
+    }
+
+    @Override
+    public String toString() {
+        return "Line[" + start + "; " + end + "]";
+    }
+}
+
+/**
+ * Represents an axis-aligned rectangle defined by two diagonal corner points
+ */
+public class Rectangle implements Shape {
+    /** Bottom-left corner of the rectangle */
     private final Point5 bottomLeft;
-    /** Top-right point of the rectangle */
+    /** Top-right corner of the rectangle */
     private final Point5 topRight;
 
     /**
-     * Creates rectangle from any two diagonal points
-     * @param p1 first diagonal point
-     * @param p2 second diagonal point
+     * Constructs a rectangle from two diagonal points
+     * @param p1 first corner
+     * @param p2 opposite corner
      */
     public Rectangle(Point5 p1, Point5 p2) {
-        double minX = Math.min(p1.getX(), p2.getX());
-        double minY = Math.min(p1.getY(), p2.getY());
-        double maxX = Math.max(p1.getX(), p2.getX());
-        double maxY = Math.max(p1.getY(), p2.getY());
-
-        this.bottomLeft = new Point5(minX, minY);
-        this.topRight = new Point5(maxX, maxY);
+        double x1 = Math.min(p1.getX(), p2.getX());
+        double y1 = Math.min(p1.getY(), p2.getY());
+        double x2 = Math.max(p1.getX(), p2.getX());
+        double y2 = Math.max(p1.getY(), p2.getY());
+        this.bottomLeft = new Point5(x1, y1);
+        this.topRight = new Point5(x2, y2);
     }
 
     /**
-     * Gets bottom-left point
+     * Copy constructor
+     * @param other rectangle;  copy
+     */
+    public Rectangle(Rectangle other) {
+        this.bottomLeft = other.bottomLeft;
+        this.topRight = other.topRight;
+    }
+
+    /**
+     * Returns the bottom-left corner point
      * @return bottom-left point
      */
-    public Point5 getBottomLeft() {
-        return bottomLeft;
-    }
+    public Point5 getBottomLeft() { return bottomLeft; }
 
     /**
-     * Gets top-right point
+     * Returns the top-right corner point
      * @return top-right point
      */
-    public Point5 getTopRight() {
-        return topRight;
+    public Point5 getTopRight() { return topRight; }
+
+    @Override
+    public List<Shape> intersect(Shape other) {
+        if (other instanceof Rectangle r) {
+            return intersectWithRectangle(r);
+        }
+        return List.of();
     }
 
     /**
-     * Checks if this rectangle intersects with another
-     * @param other rectangle to check
-     * @return true if rectangles intersect
+     * Computes the intersection with another rectangle
+     * @param other the other rectangle
+     * @return list of intersected shapes (points, lines or rectangle)
      */
-    public boolean intersects(Rectangle other) {
-        return !(this.topRight.getX() < other.bottomLeft.getX() ||
-                this.bottomLeft.getX() > other.topRight.getX() ||
-                this.topRight.getY() < other.bottomLeft.getY() ||
-                this.bottomLeft.getY() > other.topRight.getY());
-    }
+    private List<Shape> intersectWithRectangle(Rectangle other) {
+        List<Shape> result = new ArrayList<>();
 
-    /**
-     * Finds intersection points between this rectangle and another
-     * @param other the other rectangle to check against
-     * @return ArrayList of intersection points (0, 1, or 2 points)
-
-     */
-    public ArrayList<Point5> getIntersectionPoints(Rectangle other) {
-        ArrayList<Point5> points = new ArrayList<>();
-
-        if (!this.intersects(other)) {
-            return points;
+        if (this.bottomLeft.equals(other.bottomLeft) && this.topRight.equals(other.topRight)) {
+            result.add(this);
+            return result;
         }
 
-        Point5[] thisEdges = getEdges();
-        Point5[] otherEdges = other.getEdges();
+        List<Line> thisEdges = getEdges();
+        List<Line> otherEdges = other.getEdges();
 
-        for (int i = 0; i < thisEdges.length; i += 2) {
-            loop:
-            for (int j = 0; j < otherEdges.length; j += 2) {
-                Point5 intersection = findLineIntersection(
-                        thisEdges[i], thisEdges[i+1],
-                        otherEdges[j], otherEdges[j+1]
-                );
+        ArrayList<Point5> points = new ArrayList<>();
 
-                if (intersection == null) {
-                    continue;
-                }
-
-                for (Point5 p : points) {
-                    if (p.getX() == intersection.getX() && p.getY() == intersection.getY()) {
-                        continue loop;
+        for (Line e1 : thisEdges) {
+            inner_loop:
+            for (Line e2 : otherEdges) {
+                Line overlap = edgeOverlap(e1, e2);
+                if (overlap != null) {
+                    result.add(overlap);
+                } else {
+                    Point5 p = findLineIntersection(e1, e2);
+                    if (p != null) {
+                        for (Point5 pp : points) {
+                            if (pp.getX() == p.getX() && pp.getY() == p.getY()) continue inner_loop;
+                        }
+                        points.add(p);
                     }
                 }
-
-                points.add(intersection);
             }
         }
 
-        return points;
+        if (!result.isEmpty()) {
+            return result;
+        } else {
+            return new ArrayList<>(points);
+        }
     }
 
     /**
-     * Helper method to get all edges of the rectangle as point pairs
-     * @return array of points representing edges (p1, p2, p3, p4, ...)
+     * Returns rectangle edges as a list of lines in clockwise order
+     * @return list of edges
      */
-    private Point5[] getEdges() {
-        Point5 bottomRight = new Point5(topRight.getX(), bottomLeft.getY());
-        Point5 topLeft = new Point5(bottomLeft.getX(), topRight.getY());
+    private List<Line> getEdges() {
+        Point5 br = new Point5(topRight.getX(), bottomLeft.getY());
+        Point5 tl = new Point5(bottomLeft.getX(), topRight.getY());
 
-        return new Point5[] {
-                bottomLeft, bottomRight,
-                bottomRight, topRight,
-                topRight, topLeft,
-                topLeft, bottomLeft
-        };
+        return List.of(
+                new Line(bottomLeft, br), // bottom
+                new Line(br, topRight),   // right
+                new Line(topRight, tl),   // top
+                new Line(tl, bottomLeft)  // left
+        );
     }
 
     /**
-     * Finds intersection point of two lines
-     * Each line is represented by two distinct points
-     *
-     * @param line1P1 first point of line 1
-     * @param line1P2 second point of line 1
-     * @param line2P1 first point of line 2
-     * @param line2P2 second point of line 2
-     * @return intersection point or null if lines don't intersect
+     * Returns the overlapping portion of two axis-aligned edges, if any
+     * @param l1 first edge
+     * @param l2 second edge
+     * @return overlapping line segment or null
      */
-    public static Point5 findLineIntersection(Point5 line1P1, Point5 line1P2,
-                                              Point5 line2P1, Point5 line2P2) {
-        double x1 = line1P1.getX(), y1 = line1P1.getY();
-        double x2 = line1P2.getX(), y2 = line1P2.getY();
-        double x3 = line2P1.getX(), y3 = line2P1.getY();
-        double x4 = line2P2.getX(), y4 = line2P2.getY();
+    private Line edgeOverlap(Line l1, Line l2) {
+        Point5 a1 = l1.getStart(), a2 = l1.getEnd();
+        Point5 b1 = l2.getStart(), b2 = l2.getEnd();
 
-        double denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
-
-        if (denom == 0) {
-            return null;
+        if (a1.getY() == a2.getY() && b1.getY() == b2.getY() && a1.getY() == b1.getY()) {
+            // horizontal lines
+            double x1 = Math.max(Math.min(a1.getX(), a2.getX()), Math.min(b1.getX(), b2.getX()));
+            double x2 = Math.min(Math.max(a1.getX(), a2.getX()), Math.max(b1.getX(), b2.getX()));
+            if (x1 < x2) return new Line(new Point5(x1, a1.getY()), new Point5(x2, a1.getY()));
         }
 
-        double a = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom;
-        double b = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom;
+        if (a1.getX() == a2.getX() && b1.getX() == b2.getX() && a1.getX() == b1.getX()) {
+            // vertical lines
+            double y1 = Math.max(Math.min(a1.getY(), a2.getY()), Math.min(b1.getY(), b2.getY()));
+            double y2 = Math.min(Math.max(a1.getY(), a2.getY()), Math.max(b1.getY(), b2.getY()));
+            if (y1 < y2) return new Line(new Point5(a1.getX(), y1), new Point5(a1.getX(), y2));
+        }
 
-        if (a >= 0 && a <= 1 && b >= 0 && b <= 1) {
-            double x = x1 + a * (x2 - x1);
-            double y = y1 + a * (y2 - y1);
+        return null;
+    }
+
+    /**
+     * Finds the intersection point between two line segments if they intersect
+     * @param l1 first line
+     * @param l2 second line
+     * @return intersection point or null
+     */
+    private Point5 findLineIntersection(Line l1, Line l2) {
+        Point5 p1 = l1.getStart(), p2 = l1.getEnd();
+        Point5 p3 = l2.getStart(), p4 = l2.getEnd();
+
+        double x1 = p1.getX(), y1 = p1.getY();
+        double x2 = p2.getX(), y2 = p2.getY();
+        double x3 = p3.getX(), y3 = p3.getY();
+        double x4 = p4.getX(), y4 = p4.getY();
+
+        double denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+        if (denom == 0) return null;
+
+        double ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom;
+        double ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom;
+
+        if (ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1) {
+            double x = x1 + ua * (x2 - x1);
+            double y = y1 + ua * (y2 - y1);
             return new Point5(x, y);
         }
 
@@ -150,28 +231,31 @@ public class Rectangle {
 
     @Override
     public String toString() {
-        return "Rectangle[" + bottomLeft + " to " + topRight + "]";
+        return "Rectangle[" + bottomLeft + "; " + topRight + "]";
     }
 
-
+    /**
+     * Tests
+     */
     public static void main(String[] args) {
         ArrayList<Rectangle> rects = new ArrayList<>();
         rects.add(new Rectangle(new Point5(0, 0), new Point5(4, 4)));
-        rects.add( new Rectangle(new Point5(2, 2), new Point5(6, 6)));
-        rects.add( new Rectangle(new Point5(10, 10), new Point5(15, 15)));
-        rects.add( new Rectangle(new Point5(-1, -1), new Point5(0, 0)));
+        rects.add(new Rectangle(new Point5(2, 2), new Point5(6, 6)));
+        rects.add(new Rectangle(new Point5(10, 10), new Point5(15, 15)));
+        rects.add(new Rectangle(new Point5(-1, -1), new Point5(0, 0)));
         rects.add(new Rectangle(new Point5(-1, 1), new Point5(7, 3)));
         rects.add(new Rectangle(new Point5(0, 0), new Point5(4, 2)));
+        rects.add(new Rectangle(rects.getFirst()));
 
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < 7; i++) {
             System.out.println("Checking 1 and " + (i + 1) + " rects");
-            ArrayList<Point5> intersections = rects.getFirst().getIntersectionPoints(rects.get(i));
+            List<Shape> intersections = rects.getFirst().intersect(rects.get(i));
 
             if (intersections.isEmpty()) {
                 System.out.println("1 and " + (i + 1) + " rectangles do not intersect\n");
             } else {
-                for (Point5 p : intersections) {
-                    System.out.println("Intersection in: " + p);
+                for (Shape s : intersections) {
+                    System.out.println("Intersection in: " + s);
                 }
                 System.out.println();
             }
