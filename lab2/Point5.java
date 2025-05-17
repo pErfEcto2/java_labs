@@ -19,7 +19,6 @@ public class Point5 implements Shape {
 
     public double getY() { return y; }
 
-    @Override
     public java.util.List<Shape> intersect(Shape other) {
         return java.util.List.of(); // Not implemented
     }

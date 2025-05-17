@@ -20,6 +20,13 @@ interface MyComparator<T> {
         return (o1, o2) -> this.compare(o2, o1);
     }
 
+    /*
+    Метод naturalOrder() - это статическая фабрика,
+    которая создает компаратор, сравнивающий объекты в их "естественном порядке"
+    числа - по возрастающей
+    строки - по алфавиту
+    и тд
+     */
     static <T extends Comparable<T>> MyComparator<T> naturalOrder() {
         return Comparable::compareTo;
     }

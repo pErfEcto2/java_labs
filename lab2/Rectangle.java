@@ -2,9 +2,7 @@ package lab2;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -12,11 +10,10 @@ import java.util.Set;
  */
 interface Shape {
     /**
-     * Computes the intersection of the current shape with another shape
-     * @param other the other shape;  intersect with
-     * @return list of resulting intersected shapes
+     * Returns string with info about a shape
+     * @return string with info about a shape
      */
-    List<Shape> intersect(Shape other);
+    String toString();
 }
 
 /**
@@ -50,7 +47,6 @@ class Line implements Shape {
      */
     public Point5 getEnd() { return end; }
 
-    @Override
     public List<Shape> intersect(Shape other) {
         return List.of(); // Not implemented
     }
@@ -105,7 +101,6 @@ public class Rectangle implements Shape {
      */
     public Point5 getTopRight() { return topRight; }
 
-    @Override
     public List<Shape> intersect(Shape other) {
         if (other instanceof Rectangle r) {
             return intersectWithRectangle(r);
