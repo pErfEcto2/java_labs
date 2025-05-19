@@ -9,9 +9,6 @@ interface MathOperations {
         return a + b;
     }
 
-    static double circleArea(double radius) {
-        return Math.PI * radius * radius;
-    }
 }
 
 interface MyList<T> {

@@ -24,7 +24,7 @@ public class Point5 implements Shape {
     }
 
     @Override
-    public String toString() {
+    public String print() {
         return "(" + x + "; " + y + ")";
     }
 
@@ -32,5 +32,10 @@ public class Point5 implements Shape {
     public boolean equals(Object o) {
         if (!(o instanceof Point5)) return false;
         return x == ((Point5) o).x && y == ((Point5) o).y;
+    }
+
+    @Override
+    public String toString() {
+        return this.print();
     }
 }

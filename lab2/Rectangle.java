@@ -13,7 +13,7 @@ interface Shape {
      * Returns string with info about a shape
      * @return string with info about a shape
      */
-    String toString();
+    String print();
 }
 
 /**
@@ -52,8 +52,13 @@ class Line implements Shape {
     }
 
     @Override
-    public String toString() {
+    public String print() {
         return "Line[" + start + "; " + end + "]";
+    }
+
+    @Override
+    public String toString() {
+        return this.print();
     }
 }
 
@@ -194,6 +199,11 @@ public class Rectangle implements Shape {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return this.print();
+    }
+
     /**
      * Finds the intersection point between two line segments if they intersect
      * @param l1 first line
@@ -225,7 +235,7 @@ public class Rectangle implements Shape {
     }
 
     @Override
-    public String toString() {
+    public String print() {
         return "Rectangle[" + bottomLeft + "; " + topRight + "]";
     }
 

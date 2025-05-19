@@ -71,7 +71,6 @@ public class task8_from_list {
         Минусы:
             Работает только с функциональными интерфейсами
             Нельзя добавить поля или методы
-            В Java 8 лямбды не имеют доступа к не-final переменным внешней области
          */
         Printer lambdaPrinter = text -> System.out.println("Lambda: " + text);
         lambdaPrinter.print("test");
