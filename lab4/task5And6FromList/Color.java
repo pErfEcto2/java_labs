@@ -14,7 +14,12 @@ Private конструктор enum - это важная языковая га�
  */
 
 public enum Color {
-    RED("#FF0000", "RED"),
+    RED("#FF0000", "RED") {
+        @Override
+        public String getName() {
+            return super.name + " (wow...)";
+        }
+    },
     GREEN("#00FF00", "GREEN");
 
     private final String hexCode;

@@ -3,9 +3,10 @@ package lab4.task3FromList;
 
 import java.util.Objects;
 
-class Person {
+public class Person {
     private String name;
     private int age;
+    public int a;
 
     public Person(String name, int age) {
         this.name = name;

@@ -25,5 +25,15 @@ public class Main {
                 System.out.println("it's green!");
                 break;
         }
+
+        for (Color c2 : Color.values()) {
+            System.out.println("color: " + c2.name());
+        }
+
+        System.out.println(c.compareTo(c));
+        System.out.println(Color.RED.compareTo(Color.GREEN));
+        // index of value in an enum
+        System.out.println(Color.RED.ordinal());
+        System.out.println(Color.GREEN.ordinal());
     }
 }

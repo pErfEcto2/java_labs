@@ -4,6 +4,11 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lab4/task9_from_list/META-INF" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lab4/task9_from_list/META-INF/services" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lab4/task9_from_list/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lab4/task9_from_list/resources/META-INF" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lab4/task9_from_list/resources/META-INF/services" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
