@@ -17,7 +17,7 @@ public enum Color {
     RED("#FF0000", "RED") {
         @Override
         public String getName() {
-            return super.name + " (wow...)";
+            return super.getName() + " (wow...)";
         }
     },
     GREEN("#00FF00", "GREEN");

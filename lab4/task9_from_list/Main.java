@@ -37,10 +37,10 @@ public class Main {
 
         GreetingService proxyGreeter = (GreetingService) Proxy.newProxyInstance(
                 GreetingService.class.getClassLoader(), // class loader
-                new Class<?>[] { GreetingService.class }, // interface list
+                new Class<?>[] { GreetingService.class }, // interface list to implement
                 new LoggingHandler(realGreeter) // handler
         );
 
-        System.out.println(proxyGreeter.greet("Алиса"));
+        System.out.println(proxyGreeter.greet("perfecto"));
     }
 }

@@ -63,7 +63,7 @@ public class Main {
          */
         URLClassLoader loader1 = new URLClassLoader(
                 new URL[]{new File(classpath).toURI().toURL()},
-                null // Важно: отключаем делегирование
+                null // отключаем делегирование
         );
 
         URLClassLoader loader2 = new URLClassLoader(

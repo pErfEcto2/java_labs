@@ -4,31 +4,32 @@ import java.io.PrintStream;
 import java.lang.reflect.Method;
 
 public class Main {
-    public static void print() {
-        System.out.println("Hello, World");
+    public static void func() {
+        for (int i = 0; i < 1_000_000; i++) {
+            double a = Math.sqrt(i);
+        }
     }
 
-    public static void reflectionPrint() throws Exception {
-        Class<?> printStreamClass = Class.forName("java.io.PrintStream");
-        Method printlnMethod = printStreamClass.getDeclaredMethod("println", String.class);
-        Object printStream = System.out;
-        printlnMethod.invoke(printStream, "Hello, World");
+    public static void reflectionFunc() throws Exception {
+        Class<?> mainClass = Class.forName("lab4.task12.Main");
+        Method funcMethod = mainClass.getDeclaredMethod("func");
+        funcMethod.invoke(null);
     }
 
     public static void main(String[] args) throws Exception {
-        int n = 1_000_000;
+        int n = 10_000_000;
 
         long start = System.currentTimeMillis();
         PrintStream out = System.out;
         for (int i = 0; i < n; i++) {
-            print();
+            func();
         }
         long end = System.currentTimeMillis();
         long timeNormal = end - start;
 
         start = System.currentTimeMillis();
         for (int i = 0; i < n; i++) {
-            reflectionPrint();
+            reflectionFunc();
         }
         end = System.currentTimeMillis();
 

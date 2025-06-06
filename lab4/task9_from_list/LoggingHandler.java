@@ -11,7 +11,7 @@ public class LoggingHandler implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         System.out.println("calling: " + method.getName());
 
         Object result = method.invoke(target, args);
