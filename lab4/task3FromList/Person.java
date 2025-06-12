@@ -12,6 +12,8 @@ public class Person {
     public Person(String name, int age) {
         this.name = name;
         this.age = age;
+        this.a = 1;
+        this.b = 2;
     }
 
     @Override
