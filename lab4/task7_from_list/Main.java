@@ -16,6 +16,10 @@ public class Main {
     }
 
     private static String toString(Object obj, Set<Object> visitedObjects) {
+        if (obj == null) {
+            return "null";
+        }
+
         if (visitedObjects.contains(obj)) {
             return "[...]";
         }
@@ -23,66 +27,56 @@ public class Main {
         visitedObjects.add(obj);
 
         Class<?> objClass = obj.getClass();
-        StringBuilder result = new StringBuilder();
+
+        if (isSimpleType(obj)) {
+            return obj.toString();
+        }
 
         if (objClass.isArray()) {
+            StringBuilder result = new StringBuilder();
             result.append("[");
-            int arrayLength = Array.getLength(obj);
-            for (int i = 0; i < arrayLength; i++) {
+            int length = Array.getLength(obj);
+            for (int i = 0; i < length; i++) {
                 if (i > 0) result.append(", ");
-                Object arrayElement = Array.get(obj, i);
-                if (arrayElement == null) {
-                    result.append("null");
-                } else if (isSimpleType(arrayElement)) {
-                    result.append(arrayElement);
-                } else {
-                    result.append(toString(arrayElement, visitedObjects));
-                }
+                Object element = Array.get(obj, i);
+                result.append(toString(element, visitedObjects));
             }
             result.append("]");
-        } else {
-            if (objClass.getName().startsWith("java.")) {
-                result.append(objClass.getSimpleName())
-                        .append("@")
-                        .append(Integer.toHexString(obj.hashCode()));
+            return result.toString();
+        }
+
+        // is toString overridden?
+        try {
+            if (objClass.getMethod("toString").getDeclaringClass() != Object.class) {
+                return obj.toString();
+            }
+        } catch (NoSuchMethodException e) {
+        }
+
+        StringBuilder result = new StringBuilder();
+        result.append(objClass.getSimpleName()).append("{");
+
+        Field[] fields = objClass.getDeclaredFields();
+        boolean first = true;
+
+        for (Field field : fields) {
+            if (!first) {
+                result.append(", ");
             } else {
-                result.append(objClass.getSimpleName()).append("{");
+                first = false;
+            }
 
-                Field[] objectFields = objClass.getDeclaredFields();
-                boolean isFirstField = true;
-
-                for (Field field : objectFields) {
-                    if (java.lang.reflect.Modifier.isStatic(field.getModifiers()) ||
-                            java.lang.reflect.Modifier.isFinal(field.getModifiers())) {
-                        continue;
-                    }
-
-                    if (!isFirstField) result.append(", ");
-                    isFirstField = false;
-
-                    String fieldName = field.getName();
-
-                    try {
-                        field.setAccessible(true);
-                        Object fieldValue = field.get(obj);
-
-                        if (fieldValue == null) {
-                            result.append(fieldName).append("=null");
-                        } else if (isSimpleType(fieldValue)) {
-                            result.append(fieldName).append("=").append(fieldValue);
-                        } else {
-                            result.append(fieldName).append("=")
-                                    .append(toString(fieldValue, visitedObjects));
-                        }
-                    } catch (IllegalAccessException e) {
-                        result.append(fieldName).append("=<inaccessible>");
-                    }
-                }
-
-                result.append("}");
+            field.setAccessible(true);
+            try {
+                Object fieldValue = field.get(obj);
+                result.append(field.getName()).append("=")
+                        .append(toString(fieldValue, visitedObjects));
+            } catch (IllegalAccessException e) {
+                result.append(field.getName()).append("=<inaccessible>");
             }
         }
 
+        result.append("}");
         return result.toString();
     }
 
